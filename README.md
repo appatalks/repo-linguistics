@@ -32,3 +32,9 @@ The results of the language analysis for each repository are displayed in the wo
 ## Limitations
 
 Currently Public Repos Only.
+
+## Known Issues
+
+- Very early release
+- Needs Testing
+- Needs polishing
