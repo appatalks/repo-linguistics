@@ -1,0 +1,54 @@
+name: List Repository Languages
+on:
+  workflow_dispatch:
+    inputs:
+      repo-urls:
+        description: 'List of Repository URLs (comma-separated)'
+        required: true
+        default: ''
+        type: string
+
+jobs:
+  list-languages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract owner and repo from URLs
+        id: extract
+        run: |
+          IFS=',' read -ra URLS <<< "${{ inputs.repo-urls }}"
+          declare -a FORMATTED_RESULTS=()
+          for URL in "${URLS[@]}"; do
+            # Extract owner and repo from the URL
+            OWNER=$(echo $URL | awk -F/ '{print $4}')
+            REPO=$(echo $URL | awk -F/ '{print $5}')
+            echo "Extracted OWNER: $OWNER"
+            echo "Extracted REPO: $REPO"
+            
+            # Get repository languages
+            RESPONSE=$(curl -L \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/$OWNER/$REPO/languages)
+            
+            # Check if the response is an array, as expected
+              # Calculate the total lines of code
+              total_lines=$(echo "$RESPONSE" | jq 'values | add')
+              echo $total_lines
+              # Format repository languages
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Languages in \`$OWNER/$REPO\`:" >> $GITHUB_STEP_SUMMARY
+              echo "$RESPONSE" | jq -r 'to_entries[] | "\(.key): \(.value / '"$total_lines"' * 100.0)%"' | while read line; do
+                echo "$line"
+                # FORMATTED_RESULTS+=("$line")
+                language=$(echo "$line" | awk -F ': ' '{print $1}')
+                percentage=$(echo "$line" | awk -F ': ' '{printf "%.2f", $2}')
+                FORMATTED_RESULTS=$(printf "%s: %s%%\n" "$language" "$percentage")
+                echo $FORMATTED_RESULTS >> $GITHUB_STEP_SUMMARY
+              done
+          done
+
+        shell: bash
