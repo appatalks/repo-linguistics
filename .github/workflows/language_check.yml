@@ -1,6 +1,7 @@
 name: List Repository Languages
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  workflow_call:
     inputs:
       repo-urls:
         description: 'List of Repository URLs (comma-separated)'
