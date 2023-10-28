@@ -1,7 +1,7 @@
 name: List Repository Languages
 on:
-  # workflow_dispatch:
-  workflow_call:
+  workflow_dispatch:
+  # workflow_call:
     inputs:
       repo-urls:
         description: 'List of Repository URLs (comma-separated)'
@@ -34,7 +34,15 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/$OWNER/$REPO/languages)
-            
+
+            # Error Response
+            if [[ "$RESPONSE" == *'Not Found'* ]]; then
+              echo "Error: Repository $OWNER/$REPO not found."
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Error: Repository \`$OWNER/$REPO\` not found." >> $GITHUB_STEP_SUMMARY
+              continue
+            fi
+
             # Check if the response is an array, as expected
               # Calculate the total lines of code
               total_lines=$(echo "$RESPONSE" | jq 'values | add')
