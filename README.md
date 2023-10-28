@@ -2,7 +2,7 @@
 
 <img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/e98ba2df-3383-4bdc-95b2-70cc96289d75" width="520">
 
-This GitHub Actions Workflow ```language_check.yml``` file allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
+This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reusable-workflows-github-actions/) allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
 
 ## Workflow Inputs
 
@@ -14,7 +14,7 @@ This GitHub Actions Workflow ```language_check.yml``` file allows you to list th
 
 ## Workflow Execution
 
-This GitHub Action workflow consists of the following steps:
+This GitHub Action Reusable workflow consists of the following steps:
 
 1. **Checkout Code**: The workflow checks out the code of the repository where the workflow is triggered.
 
@@ -22,7 +22,7 @@ This GitHub Action workflow consists of the following steps:
 
     - For each repository URL provided, the workflow does the following:
         - Extracts the owner and repository name from the URL.
-        - Uses the GitHub API to fetch information about the languages used in the repository.
+        - Uses the [GitHub API](https://docs.github.com/en/free-pro-team@latest/rest/repos/repos?apiVersion=2022-11-28#list-repository-languages) to fetch information about the languages used in the repository.
         - Calculates the percentage of code written in each language.
 
 ## Output
