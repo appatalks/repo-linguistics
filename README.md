@@ -29,6 +29,28 @@ This GitHub Action workflow consists of the following steps:
 
 The results of the language analysis for each repository are displayed in the workflow's summary, which can be accessed in the Actions tab of your GitHub repository. The information includes a breakdown of languages and their respective percentages in each repository.
 
+## How to add to your Actions
+
+Create ```.github/workflows/check-language.yml``` file and add:
+
+```yml
+name: List Repository Languages
+on:
+  workflow_dispatch:
+    inputs:
+      repo-urls:
+        description: 'List of Repository URLs (comma-separated)'
+        required: true
+        default: ''
+        type: string
+
+jobs:
+  call-check-languages-workflow:
+    uses: appatalks/GH-Action-Repo-Language-Check/.github/workflows/language_check.yml@main
+    with:
+      repo-urls: ${{ inputs.repo-urls }}
+```
+
 ## Limitations
 
 Currently Public Repos Only.
