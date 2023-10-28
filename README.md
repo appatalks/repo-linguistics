@@ -26,3 +26,7 @@ This GitHub Action workflow consists of the following steps:
 ## Output
 
 The results of the language analysis for each repository are displayed in the workflow's summary, which can be accessed in the Actions tab of your GitHub repository. The information includes a breakdown of languages and their respective percentages in each repository.
+
+## Limitations
+
+Currently Public Repos Only.
