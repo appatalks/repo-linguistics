@@ -2,7 +2,7 @@
 
 <img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/e98ba2df-3383-4bdc-95b2-70cc96289d75" width="520">
 
-This GitHub Action allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
+This GitHub Action Workflow (language_check.yml) allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
 
 ## Workflow Inputs
 
