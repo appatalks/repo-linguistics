@@ -38,3 +38,4 @@ Currently Public Repos Only.
 - Very early release
 - Needs Testing
 - Needs polishing
+- Needs Error Detection
