@@ -1,6 +1,6 @@
 name: List Repository Languages
 on:
-  # workflow_dispatch:
+  #workflow_dispatch:
   workflow_call:
     inputs:
       repo-urls:
@@ -19,6 +19,7 @@ jobs:
       - name: Extract owner and repo from URLs
         id: extract
         run: |
+          echo "**Repo Language Report**" >> $GITHUB_STEP_SUMMARY
           IFS=',' read -ra URLS <<< "${{ inputs.repo-urls }}"
           declare -a FORMATTED_RESULTS=()
           for URL in "${URLS[@]}"; do
@@ -37,9 +38,9 @@ jobs:
 
             # Error Response
             if [[ "$RESPONSE" == *'Not Found'* ]]; then
-              echo "Error: Repository $OWNER/$REPO not found."
+              echo "$OWNER/$REPO not found."
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "Error: Repository \`$OWNER/$REPO\` not found." >> $GITHUB_STEP_SUMMARY
+              echo "\`$OWNER/$REPO\` Repo not found or no access." >> $GITHUB_STEP_SUMMARY
               continue
             fi
 
@@ -47,17 +48,32 @@ jobs:
               # Calculate the total lines of code
               total_lines=$(echo "$RESPONSE" | jq 'values | add')
               echo $total_lines
+
+            # Check null for language
+              if [[ "$total_lines" == *"null"* ]]; then
+                echo "\`$OWNER/$REPO\`: Language not identified"
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "[\`\`\`$OWNER/$REPO\`\`\`]($URL)<br>" >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                echo "Language not identified" >> $GITHUB_STEP_SUMMARY
+                echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+                continue
+              fi
+              
               # Format repository languages
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "Languages in \`$OWNER/$REPO\`:" >> $GITHUB_STEP_SUMMARY
+              #echo "\`$OWNER/$REPO\`" >> $GITHUB_STEP_SUMMARY
+              echo "[\`\`\`$OWNER/$REPO\`\`\`]($URL)" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`python" >> $GITHUB_STEP_SUMMARY
               echo "$RESPONSE" | jq -r 'to_entries[] | "\(.key): \(.value / '"$total_lines"' * 100.0)%"' | while read line; do
                 echo "$line"
-                # FORMATTED_RESULTS+=("$line")
+                #FORMATTED_RESULTS+=$(echo "$line") 
                 language=$(echo "$line" | awk -F ': ' '{print $1}')
                 percentage=$(echo "$line" | awk -F ': ' '{printf "%.2f", $2}')
                 FORMATTED_RESULTS=$(printf "%s: %s%%\n" "$language" "$percentage")
                 echo $FORMATTED_RESULTS >> $GITHUB_STEP_SUMMARY
               done
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           done
 
         shell: bash
