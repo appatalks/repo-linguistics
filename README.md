@@ -68,10 +68,10 @@ jobs:
 ## Limitations
 
 Alpha Version
+Not available to GHES (Server)... just yet. Soon!
 
 ## Known Issues
 
 - Very early release
 - Needs Testing
-- Needs polishing
 - Needs Error Detection
