@@ -59,7 +59,10 @@ jobs:
             fi
 
             if [[ "$RESPONSE" == *'error'* ]]; then
-              echo $RESPONSE > error.md 
+              echo "```json" > error.md
+              echo $RESPONSE >> error.md
+              echo "" >> error.md
+              echo "```" >> error.md
               continue
             fi
 
