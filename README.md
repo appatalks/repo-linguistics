@@ -49,6 +49,11 @@ on:
         required: true
         default: ''
         type: string
+      use-secret-patLang:
+        description: 'Use PAT? secrets.patLang'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   call-check-languages-workflow:
