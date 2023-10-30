@@ -15,7 +15,7 @@ This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reus
 ### `use-secret-patLang` (optional)
 
 - Description: Use [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for additional access
-- Example: [x] Boolen sets to ```true``` to enable use of ```secrets.patLang```
+- Example: [x] Boolen sets to ```true``` to enable use of ```secrets.PATLANG```
 - Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```  
 
 ## Workflow Execution
@@ -49,17 +49,25 @@ on:
         required: true
         default: ''
         type: string
+      use-secret-patLang:
+        description: 'Use PAT? secrets.patLang'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   call-check-languages-workflow:
     uses: appatalks/GH-Action-Repo-Language-Check/.github/workflows/language_check.yml@main
     with:
       repo-urls: ${{ inputs.repo-urls }}
+      use-secret-patLang: ${{ inputs.use-secret-patLang }}
+    secrets: 
+      PATLANG: ${{ secrets.PATLANG }}
 ```
 
 ## Limitations
 
-Currently Public Repos Only.
+Alpha Version
 
 ## Known Issues
 
