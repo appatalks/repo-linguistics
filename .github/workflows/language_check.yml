@@ -35,8 +35,6 @@ jobs:
             # Extract owner and repo from the URL
             OWNER=$(echo $URL | awk -F/ '{print $4}')
             REPO=$(echo $URL | awk -F/ '{print $5}')
-            # echo "Extracted OWNER: $OWNER"
-            # echo "Extracted REPO: $REPO"
             
             # Get repository languages
             if [[ ${{ inputs.use-secret-patLang }} == true ]]; then
@@ -62,15 +60,13 @@ jobs:
 
             if [[ "$RESPONSE" == *'error'* ]]; then
               echo $RESPONSE > error.md 
-              cat error.md >> $GITHUB_STEP_SUMMARY
               continue
             fi
 
             # Check if the response is an array, as expected
               # Calculate the total lines of code
               total_lines=$(echo "$RESPONSE" | jq 'values | add')
-              # echo $total_lines
-
+              
             # Check null for language
               if [[ "$total_lines" == *"null"* ]]; then
                 echo "\`$OWNER/$REPO\`: Language not identified"
@@ -84,12 +80,10 @@ jobs:
               
               # Format repository languages
               echo "" >> $GITHUB_STEP_SUMMARY
-              #echo "\`$OWNER/$REPO\`" >> $GITHUB_STEP_SUMMARY
               echo "[\`\`\`$OWNER/$REPO\`\`\`]($URL)" >> $GITHUB_STEP_SUMMARY
               echo "\`\`\`yml" >> $GITHUB_STEP_SUMMARY
               echo "$RESPONSE" | jq -r 'to_entries[] | "\(.key): \(.value / '"$total_lines"' * 100.0)%"' | while read line; do
-                echo "$line"
-                #FORMATTED_RESULTS+=$(echo "$line") 
+                echo "$line" 
                 language=$(echo "$line" | awk -F ': ' '{print $1}')
                 percentage=$(echo "$line" | awk -F ': ' '{printf "%.2f", $2}')
                 FORMATTED_RESULTS=$(printf "%s: %s%%\n" "$language" "$percentage")
@@ -148,5 +142,6 @@ jobs:
           echo "\`\`\`" >> lang_sum.md
           cat lang_sum.md > $GITHUB_STEP_SUMMARY
           cat summary.md >> $GITHUB_STEP_SUMMARY
+          cat error.md >> $GITHUB_STEP_SUMMARY
           
         shell: bash
