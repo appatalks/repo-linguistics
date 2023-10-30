@@ -63,7 +63,8 @@ jobs:
               echo "$RESPONSE" >> error.md
               echo "" >> error.md
               echo "\`\`\`" >> error.md
-              continue
+              cat error.md >> $GITHUB_STEP_SUMMARY
+              exit 1
             fi
 
             # Check if the response is an array, as expected
@@ -145,6 +146,5 @@ jobs:
           echo "\`\`\`" >> lang_sum.md
           cat lang_sum.md > $GITHUB_STEP_SUMMARY
           cat summary.md >> $GITHUB_STEP_SUMMARY
-          cat error.md >> $GITHUB_STEP_SUMMARY
           
         shell: bash
