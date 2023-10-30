@@ -61,7 +61,7 @@ jobs:
             fi
 
             if [[ "$RESPONSE" == *'error'* ]]; then
-              echo "$RESPONSE" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`$RESPONSE\`\`\`" >> $GITHUB_STEP_SUMMARY
               continue
             fi
 
