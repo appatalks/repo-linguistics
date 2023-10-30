@@ -13,6 +13,9 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      PATLANG:
+        required: false
         
 jobs:
   list-languages:
