@@ -67,8 +67,8 @@ jobs:
 
 ## Limitations
 
-Alpha Version
-Not available to GHES (Server)... just yet. Soon!
+- Alpha Version
+- Not available to GHES (Server)... just yet. Soon!
 
 ## Known Issues
 
