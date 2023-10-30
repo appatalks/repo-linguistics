@@ -58,9 +58,9 @@ jobs:
               continue
             fi
 
-            if [[ "$RESPONSE" == *'Bad'* ]]; then
+            if [[ "$RESPONSE" == *'Bad credentials'* ]]; then
               echo "```json" > error.md
-              echo $RESPONSE >> error.md
+              echo "$RESPONSE" >> error.md
               echo "" >> error.md
               echo "```" >> error.md
               continue
