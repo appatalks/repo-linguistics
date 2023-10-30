@@ -55,9 +55,13 @@ jobs:
 
             # Error Response
             if [[ "$RESPONSE" == *'Not Found'* ]]; then
-              # echo "$OWNER/$REPO not found."
               echo "" >> $GITHUB_STEP_SUMMARY
               echo "\`$OWNER/$REPO\` Repo not found or no access" >> $GITHUB_STEP_SUMMARY
+              continue
+            fi
+
+            if [[ "$RESPONSE" == *'error'* ]]; then
+              echo "$RESPONSE" >> $GITHUB_STEP_SUMMARY
               continue
             fi
 
