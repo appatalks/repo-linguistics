@@ -12,6 +12,12 @@ This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reus
 - Example: `https://github.com/owner1/repo1,https://github.com/owner2/repo2`
 - Usage: Provide the URLs of the repositories you want to analyze.
 
+### `use-secret-patLang` (optional)
+
+- Description: Use [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for additional access
+- Example: [x] Boolen sets to ```true``` to enable use of ```secrets.patLang```
+- Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```  
+
 ## Workflow Execution
 
 This GitHub Action Reusable workflow consists of the following steps:
