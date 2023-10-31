@@ -1,4 +1,4 @@
-# List Repository Languages GitHub Action
+# List Repository Languages GitHub Action Workflow
 
 <img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/e45579f8-d862-4f21-bb58-0fb80998c44c" width="520">
 
