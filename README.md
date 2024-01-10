@@ -1,6 +1,6 @@
 # List Repository Languages GitHub Action Workflow
 
-<img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/80627b92-c791-47bd-8948-5443c53660bb" width="520">
+<img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/80627b92-c791-47bd-8948-5443c53660bb" width="640">
 
 This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reusable-workflows-github-actions/) allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
 
@@ -16,7 +16,11 @@ This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reus
 
 - Description: Use [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for additional access
 - Example: [x] Boolen sets to ```true``` to enable use of ```secrets.PATLANG```
-- Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```  
+- Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```
+
+### `scan-branches` (optional)
+
+- Description: Scan ALL branches using [Linguist](https://github.com/github-linguist/linguist) for their languages.
 
 ## Workflow Execution
 
