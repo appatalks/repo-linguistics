@@ -66,6 +66,7 @@ jobs:
     with:
       repo-urls: ${{ inputs.repo-urls }}
       use-secret-patLang: ${{ inputs.use-secret-patLang }}
+      scan-branches: ${{ inputs.scan-branches }}
     secrets: 
       PATLANG: ${{ secrets.PATLANG }}
 ```
