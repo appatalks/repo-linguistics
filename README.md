@@ -54,6 +54,11 @@ on:
         required: false
         default: false
         type: boolean
+      scan-branches:
+        description: 'Scan Branches'
+        required: false
+        default: false
+        type: boolean  
 
 jobs:
   call-check-languages-workflow:
