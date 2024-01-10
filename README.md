@@ -1,6 +1,6 @@
 # List Repository Languages GitHub Action Workflow
 
-<img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/e45579f8-d862-4f21-bb58-0fb80998c44c" width="520">
+<img src="https://github.com/appatalks/GH-Action-Repo-Language-Check/assets/4163156/80627b92-c791-47bd-8948-5443c53660bb" width="520">
 
 This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reusable-workflows-github-actions/) allows you to list the languages used in one or more repositories. It retrieves information about the languages used in each specified repository and calculates the percentage of code written in each language.
 
