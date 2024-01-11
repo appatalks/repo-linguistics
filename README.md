@@ -16,11 +16,18 @@ This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reus
 
 - Description: Use [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for additional access
 - Example: [x] Boolen sets to ```true``` to enable use of ```secrets.PATLANG```
-- Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```
+- Usage: Create a [repository secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) ```PATLANG``` with ```Personal Access Token```.
 
 ### `scan-branches` (optional)
 
-- Description: Scan ALL branches using [Linguist](https://github.com/github-linguist/linguist) for their languages.
+- Description: Scan ALL branches using [Linguist](https://github.com/github-linguist/linguist) for their languages
+- Example: [x] Boolen sets to ```true``` to enable use of [Linguist](https://github.com/github-linguist/linguist)
+
+### `csv-gen` (optional)
+
+- Description: Generate a CSV File of Branch Results
+- Example: [x] Boolen sets to ```true``` to allow upload of ```output.csv``` as an [Artifact](https://docs.github.com/en/rest/actions/artifacts?apiVersion=2022-11-28)
+- Usage: Download the ```output.csv``` which can be accessed in the Actions tab of your GitHub repository.
 
 ## Workflow Execution
 
@@ -62,6 +69,11 @@ on:
         description: 'Scan Branches'
         required: false
         default: false
+        type: boolean
+      csv-gen:
+        description: 'Generate CSV File'
+        required: false
+        default: false
         type: boolean  
 
 jobs:
@@ -71,6 +83,7 @@ jobs:
       repo-urls: ${{ inputs.repo-urls }}
       use-secret-patLang: ${{ inputs.use-secret-patLang }}
       scan-branches: ${{ inputs.scan-branches }}
+      csv-gen: ${{ inputs.csv-gen }}  
     secrets: 
       PATLANG: ${{ secrets.PATLANG }}
 ```
