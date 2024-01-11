@@ -1,4 +1,4 @@
-name: List Repository Languages
+name: 00 CSV List Repository Languages
 on:
   # workflow_dispatch:
   workflow_call:
@@ -17,11 +17,16 @@ on:
         description: 'Scan Branches'
         required: false
         default: false
+        type: boolean
+      csv-gen:
+        description: 'Generate CSV File'
+        required: false
+        default: false
         type: boolean  
     secrets:
       PATLANG:
         required: false
-        
+
 jobs:
   list-languages:
     runs-on: ubuntu-latest
@@ -35,10 +40,11 @@ jobs:
           if [[ ${{ inputs.scan-branches }} == true ]]; then
             sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
             sudo gem install github-linguist
+            echo "Owner/Branch,Language,Percentage" > /tmp/output.csv
           else
             echo "Branches not selected - nothing to do"
           fi
-          
+
       - name: Run payload from URLs
         id: extract
         run: |
@@ -50,7 +56,7 @@ jobs:
             # Extract owner and repo from the URL
             OWNER=$(echo $URL | awk -F/ '{print $4}')
             REPO=$(echo $URL | awk -F/ '{print $5}')
-            
+
             # Get repository languages
             if [[ ${{ inputs.use-secret-patLang }} == true ]]; then
               RESPONSE=$(curl -s -L \
@@ -78,7 +84,7 @@ jobs:
             # Check if the response is an array, as expected
               # Calculate the total lines of code
               total_lines=$(echo "$RESPONSE" | jq 'values | add')
-              
+
             # Check null for language
               if [[ "$total_lines" == *"null"* ]]; then
                 echo "\`$OWNER/$REPO\`: Language not identified"
@@ -89,13 +95,13 @@ jobs:
                 echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
                 continue
               fi
-              
+
               # Format repository languages
               echo "" >> $GITHUB_STEP_SUMMARY
               echo "[\`\`\`$OWNER/$REPO\`\`\`]($URL)" >> $GITHUB_STEP_SUMMARY
               echo "\`\`\`yml" >> $GITHUB_STEP_SUMMARY
               echo "$RESPONSE" | jq -r 'to_entries[] | "\(.key): \(.value / '"$total_lines"' * 100.0)%"' | while read line; do
-                echo "$line" 
+                echo "$line"
                 language=$(echo "$line" | awk -F ': ' '{print $1}')
                 percentage=$(echo "$line" | awk -F': ' '{printf "%.2f",$2}')
                 FORMATTED_RESULTS=$(printf "%s: %s%%\n" "$language" "$percentage")
@@ -108,7 +114,7 @@ jobs:
                 git clone https://github.com/$OWNER/$REPO.git
                 cd $REPO
                 BRANCHES=$(git branch -r | grep -v HEAD | sed 's/origin\///' | jq -R -s -c 'split("\n")[:-1]' | jq -r '.[]')
-                SUMMARY="" 
+                SUMMARY=""
                 echo "\`\`\`yml" >> $GITHUB_STEP_SUMMARY
                 echo "Branch Summary" >> $GITHUB_STEP_SUMMARY
                 for branch in $(echo "${BRANCHES}"); do
@@ -116,13 +122,18 @@ jobs:
                   branch=$(echo "$branch" | xargs)
                   git checkout $branch
                   LINGUIST_OUTPUT=$(github-linguist --json)
+                  if [[ ${{ inputs.csv-gen }} == true ]]; then
+                    echo $LINGUIST_OUTPUT | jq -r --arg branch "$OWNER/$REPO/$branch" 'to_entries[] | [$branch, .key, .value.percentage] | @csv' >> /tmp/output.csv
+                  else
+                    echo "CSV option not selected - nothing to do."
+                  fi  
                   echo "$branch:" >> $GITHUB_STEP_SUMMARY
                   branch_lang=$(echo "$LINGUIST_OUTPUT" | jq -r 'keys[]')
                   lang_percentage=$(echo "$LINGUIST_OUTPUT" | jq -r '.[] | .percentage')
                   FORMATTED_BRESULTS=""
                   for lang in $(echo "${branch_lang}"); do
                     lang_percentage=$(echo "$LINGUIST_OUTPUT" | jq -r --arg lang "$lang" '.[$lang].percentage')
-                    FORMATTED_BRESULTS+="- $lang $lang_percentage%\n"
+                    FORMATTED_BRESULTS+="- $lang $lang_percentage%\n"  
                   done
                   echo -e $FORMATTED_BRESULTS >> $GITHUB_STEP_SUMMARY
                 done
@@ -131,14 +142,14 @@ jobs:
               else
                 echo "Branches not selected - nothing to do"
               fi
-              
+
               # Export Results
               cat $GITHUB_STEP_SUMMARY > summary.md
           done
 
           # Extract the summary from the GitHub step
           summary=$(cat $GITHUB_STEP_SUMMARY)
-    
+
           # Generate Global Language Summary
           repo_count=$(grep -cE '^\[```' $GITHUB_STEP_SUMMARY)
           echo "**REPOSITORY PROGRAMMING LANGUAGE SUMMARY**" > lang_sum.md
@@ -148,7 +159,7 @@ jobs:
           echo "Languages and Percentages: " >> lang_sum.md
           echo "" >> lang_sum.md
           echo "\`\`\`yml" >> lang_sum.md
-          
+
           cat $GITHUB_STEP_SUMMARY | awk '
             BEGIN {
               FS=": ";
@@ -185,5 +196,14 @@ jobs:
           echo "\`\`\`" >> lang_sum.md
           cat lang_sum.md > $GITHUB_STEP_SUMMARY
           cat summary.md >> $GITHUB_STEP_SUMMARY
-          
+
         shell: bash
+
+      - name: Upload CSV
+        if: success() && ${{ inputs.csv-gen == true }} 
+        id: csv
+        uses: actions/upload-artifact@v4
+        with:
+          name: output.csv
+          path: /tmp/output.csv
+          # retention-days: 42
