@@ -1,4 +1,4 @@
-name: 00 CSV List Repository Languages
+name: List Repository Languages
 on:
   # workflow_dispatch:
   workflow_call:
