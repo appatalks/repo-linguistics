@@ -23,7 +23,7 @@ This GitHub Action [Reusable Workflow](https://github.blog/2022-02-10-using-reus
 - Description: Scan ALL branches using [Linguist](https://github.com/github-linguist/linguist) for their languages
 - Example: [x] Boolen sets to ```true``` to enable use of [Linguist](https://github.com/github-linguist/linguist)
 
-### `csv-gen` (optional)
+### `csv-gen` (optional with `scan-branches`)
 
 - Description: Generate a CSV File of Branch Results
 - Example: [x] Boolen sets to ```true``` to allow upload of ```output.csv``` as an [Artifact](https://docs.github.com/en/rest/actions/artifacts?apiVersion=2022-11-28)
